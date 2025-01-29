@@ -1,3 +1,6 @@
+// import React from 'react';
+import { Link } from 'react-router-dom';
+
 const Nav = () => {
   // TODO: Add necessary code to display the navigation bar and link between the pages
   return (
@@ -8,17 +11,9 @@ const Nav = () => {
                     <Link to="/">Home</Link>
                 </li>
                 <li>
-                    <Link to="/about">About</Link>
+                    <Link to="/potential candidates">Potential Candidates</Link>
                 </li>
-                <li>
-                    <Link to="/portfolio">Portfolio</Link>
-                </li>
-                <li>
-                    <Link to="/contact">Contact</Link>
-                </li>
-                <li>
-                    <Link to="/resume">Resume</Link>
-                </li>
+           
             </ul>
         </nav>
     </div>
