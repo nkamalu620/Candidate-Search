@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { searchGithub, searchGithubUser } from '../api/API';
 import { Candidate } from '../interfaces/Candidate.interface';
 import { Link } from 'react-router-dom';
-import React from 'react';
+//import React from 'react';
 
 function CandidateSearch() {
   const [candidates, setCandidates] = useState<Candidate[]>([]);
