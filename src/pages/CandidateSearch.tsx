@@ -80,11 +80,14 @@ function CandidateSearch() {
         <div>
           <img src={currentCandidate.avatar_url} alt={currentCandidate.name} />
         </div>
-        <p>Octocat</p>
-        <p>Location: London, UK</p>
-        <p>Email: Octocat@gmail.com</p>
-        <p>Company: Github</p>
-        <p>Bio: I am an aspiring web developer looking to work with great people.</p>
+        <p>Name: {currentCandidate.name}</p>
+        <p>Username: {currentCandidate.login}</p>
+        <p>Location: {currentCandidate.location}</p>
+        <p>Email: {currentCandidate.email}</p>
+        <p>Company: {currentCandidate.company}</p>
+        <p>
+          Profile: <a href={currentCandidate.html_url}>{currentCandidate.html_url}</a>
+        </p>
         <button type="button" onClick={handleSaveCandidate}>+</button>
         <button type="button" onClick={handleSkipCandidate}>-</button>
       </div>
