@@ -6,9 +6,9 @@ const SavedCandidates = () => {
   const [savedCandidates, setSavedCandidates] = useState<Candidate[]>([]);
 
   useEffect(() => {
-    const savedCandidatesData = localStorage.getItem('savedCandidates');
+   const savedCandidatesData = localStorage.getItem('savedCandidates');
     if (savedCandidatesData) {
-      setSavedCandidates(JSON.parse(savedCandidatesData));
+      setSavedCandidates(JSON .parse(savedCandidatesData));
     }
   }, []);
   

@@ -25,6 +25,7 @@ function CandidateSearch() {
   const handleSaveCandidate = async () => {
     if (currentCandidate) {
       setSavedCandidates([...savedCandidates, currentCandidate]);
+      setItem();
       const nextCandidateData = candidates.find(candidate => candidate.login !== currentCandidate.login);
       if (nextCandidateData) {
         const nextCandidate = await searchGithubUser(nextCandidateData.login);
@@ -35,6 +36,20 @@ function CandidateSearch() {
       }
     }
   };
+
+  const setItem = () => {
+    let savedCandidatesData: Candidate[] = [];
+    const savedCandidatesString = localStorage.getItem('savedCandidates');
+    if (savedCandidatesString) {
+      savedCandidatesData = JSON.parse(savedCandidatesString);
+    }
+    if (currentCandidate) {
+      savedCandidatesData.push(currentCandidate);
+    }
+    
+    localStorage.setItem('savedCandidates', JSON.stringify(savedCandidates));
+  }
+
 
   const handleSkipCandidate = async () => {
     if (currentCandidate) {
