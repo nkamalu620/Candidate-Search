@@ -4,68 +4,69 @@ import { Candidate } from '../interfaces/Candidate.interface';
 import { Link } from 'react-router-dom';
 //import React from 'react';
 
+// CandidateSearch component
+// Gets the candidates from github and displays them one at a time
 function CandidateSearch() {
   const [candidates, setCandidates] = useState<Candidate[]>([]);
+  const [index, setIndex] = useState<number>(0);
   const [currentCandidate, setCurrentCandidate] = useState<Candidate | null>(null);
   const [savedCandidates, setSavedCandidates] = useState<Candidate[]>([]);
-  const [noMoreCandidates, setNoMoreCandidates] = useState(false);
- 
-  useEffect(() => {
+
+async function getNextCandidate() {
+  if (index >= candidates.length) {
+    
+    return;
+  }
+  const login = candidates[index].login;
+  const candidateData = await searchGithubUser(login);
+  setCurrentCandidate(candidateData);
+  setIndex(index + 1);
+}
+
+useEffect(() => {
     const fetchCandidates = async () => {
+      // Get array of candidates
       const data = await searchGithub();
+      
+
       setCandidates(data);
-      if (data.length > 0) {
-        const candidateData = await searchGithubUser(data[0].login);
-        setCurrentCandidate(candidateData);
-      }
     };
     fetchCandidates();
   }, []);
 
+  useEffect(() => {
+    if (candidates.length === 0) { return; }
+    getNextCandidate();
+  }, [candidates]);
+
   const handleSaveCandidate = async () => {
-    if (currentCandidate) {
-      setSavedCandidates([...savedCandidates, currentCandidate]);
-      setItem();
-      const nextCandidateData = candidates.find(candidate => candidate.login !== currentCandidate.login);
-      if (nextCandidateData) {
-        const nextCandidate = await searchGithubUser(nextCandidateData.login);
-        setCurrentCandidate(nextCandidate);
-      } else {
-        setCurrentCandidate(null);
-        setNoMoreCandidates(true);
-      }
-    }
+    if (!currentCandidate) { return; }
+
+
+    setItem();
+    getNextCandidate();
   };
 
   const setItem = () => {
-    let savedCandidatesData: Candidate[] = [];
-    const savedCandidatesString = localStorage.getItem('savedCandidates');
-    if (savedCandidatesString) {
-      savedCandidatesData = JSON.parse(savedCandidatesString);
-    }
-    if (currentCandidate) {
-      savedCandidatesData.push(currentCandidate);
-    }
-    
-    localStorage.setItem('savedCandidates', JSON.stringify(savedCandidates));
+    if (!currentCandidate) { return; }
+
+    setSavedCandidates([...savedCandidates, currentCandidate]);
+
+    const savedCandidatesString = localStorage.getItem('savedCandidates') || '[]';
+
+    let savedCandidatesData: Candidate[] = JSON.parse(savedCandidatesString);
+    savedCandidatesData.push(currentCandidate);
+
+    localStorage.setItem('savedCandidates', JSON.stringify(savedCandidatesData));
   }
 
 
   const handleSkipCandidate = async () => {
-    if (currentCandidate) {
-      const nextCandidateData = candidates.find(candidate => candidate.login !== currentCandidate.login);
-      if (nextCandidateData) {
-        const nextCandidate = await searchGithubUser(nextCandidateData.login);
-        setCurrentCandidate(nextCandidate);
-      } else {
-        setCurrentCandidate(null);
-        setNoMoreCandidates(true);
-      }
-    }
+    getNextCandidate();
   };
 
-  if (noMoreCandidates) {
-    return <div>No more candidates available.</div>;
+  if (index === candidates.length) {
+    return <p>No more candidates available. Please refresh.</p>;
   }
 
   if (!currentCandidate) {
